@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.example.android.bakingapp.R;
 import com.example.android.bakingapp.data.RecipeModel;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
