@@ -29,12 +29,8 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecyclerVi
         mOnLickListener = listener;
     }
 
-    public interface ListItemClickListener {
-        void onListItemClick(RecipeModel clickedItemIndex);
-    }
-
-    public void setRecipeData(RecipeModel recipeModel, Context context) {
-        mRecipes.add(recipeModel);
+    public void setRecipeData(ArrayList<RecipeModel> recipeModel, Context context) {
+        mRecipes = recipeModel;
         mContext = context;
         notifyDataSetChanged();
     }
@@ -45,7 +41,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecyclerVi
         int layoutIdForListItem = R.layout.grid_item_layout;
 
         LayoutInflater inflater = LayoutInflater.from(context);
-        View view = inflater.inflate(layoutIdForListItem, parent,  false);
+        View view = inflater.inflate(layoutIdForListItem, parent, false);
         RecyclerViewHolder viewHolder = new RecyclerViewHolder(view);
 
         return viewHolder;
@@ -54,9 +50,9 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecyclerVi
     @Override
     public void onBindViewHolder(RecyclerViewHolder holder, int position) {
         holder.textRecyclerView.setText(mRecipes.get(position).getName());
-        String imageUrl=mRecipes.get(position).getImage();
+        String imageUrl = mRecipes.get(position).getImage();
 
-        if (imageUrl!="") {
+        if (imageUrl != "") {
             Uri builtUri = Uri.parse(imageUrl).buildUpon().build();
             Picasso.with(mContext).load(builtUri).into(holder.imageRecyclerView);
         }
@@ -65,11 +61,15 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecyclerVi
 
     @Override
     public int getItemCount() {
-        if (mRecipes.isEmpty()) {
+        if (mRecipes == null) {
             return 0;
         } else {
             return mRecipes.size();
         }
+    }
+
+    public interface ListItemClickListener {
+        void onListItemClick(RecipeModel clickedItemIndex);
     }
 
     class RecyclerViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {

@@ -11,17 +11,21 @@
  limitations under the License.-->
 
 <!--Layout for a GridView item in the Menu Activity-->
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:gravity="center_horizontal"
+    android:gravity="center"
     android:layout_height="wrap_content"
-    >
+    android:layout_marginTop="50dp"
+    android:layout_marginLeft="110dp"
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/title_recipe"
         android:layout_width="match_parent"
         android:layout_height="100dp"
+        android:textSize="20dp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Caption"
         android:textAlignment="center"
         />
 
@@ -31,4 +35,4 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-</RelativeLayout>
+</LinearLayout>

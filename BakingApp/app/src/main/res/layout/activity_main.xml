@@ -4,6 +4,7 @@
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:gravity="center"
     >
 
     <android.support.v7.widget.Toolbar
@@ -14,18 +15,10 @@
         android:textAlignment="center"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
 
-    <GridView
-        android:id="@+id/tea_grid_view"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="5dp"
-        android:clickable="true"
-        android:columnWidth="100dp"
-        android:drawSelectorOnTop="true"
-        android:focusable="true"
-        android:gravity="center"
-        android:numColumns="1"
-        android:stretchMode="columnWidth"
-        android:verticalSpacing="5dp" />
+    <fragment
+        android:id="@+id/recipe_fragment_body_part"
+        android:name="com.example.android.bakingapp.fragment.RecipeFragment"
+        android:layout_width="265dp"
+        android:layout_height="match_parent" />
 
 </RelativeLayout>
