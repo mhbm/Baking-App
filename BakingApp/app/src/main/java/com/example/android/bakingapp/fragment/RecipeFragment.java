@@ -12,7 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.android.bakingapp.MainActivity;
+import com.example.android.bakingapp.ui.MainActivity;
 import com.example.android.bakingapp.R;
 import com.example.android.bakingapp.adapter.RecipeAdapter;
 import com.example.android.bakingapp.data.RecipeModel;

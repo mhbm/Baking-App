@@ -1,9 +1,10 @@
-package com.example.android.bakingapp;
+package com.example.android.bakingapp.ui;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
+import com.example.android.bakingapp.R;
 import com.example.android.bakingapp.adapter.RecipeAdapter;
 import com.example.android.bakingapp.data.RecipeModel;
 
@@ -36,7 +37,6 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Lis
         ArrayList<RecipeModel> selectedRecipe = new ArrayList<>();
         selectedRecipe.add(selectedItemIndex);
         selectedRecipeBundle.putParcelableArrayList(SELECTED_RECIPES,selectedRecipe);
-
 //        final Intent intent = new Intent(this, RecipeDetailActivity.class);
 //        intent.putExtras(selectedRecipeBundle);
 //        startActivity(intent);
