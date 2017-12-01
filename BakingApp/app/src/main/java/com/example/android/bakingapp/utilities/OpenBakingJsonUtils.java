@@ -25,9 +25,6 @@ public class OpenBakingJsonUtils {
         JSONArray recipeArray = recipeJson.getJSONArray("results");
 
 
-
-
-
         for (int i = 0; i < recipeArray.length(); i++) {
 
             RecipeModel recipeGet = new RecipeModel();
