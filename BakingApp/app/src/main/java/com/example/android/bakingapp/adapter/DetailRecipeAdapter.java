@@ -69,7 +69,7 @@ public class DetailRecipeAdapter extends RecyclerView.Adapter<DetailRecipeAdapte
         public RecyclerViewHolder(View itemView) {
             super(itemView);
 
-            textRecyclerView = itemView.findViewById(R.id.tv_descriptionRecipe);
+            textRecyclerView = itemView.findViewById(R.id.tv_recipe_ingredients);
 
             itemView.setOnClickListener(this);
         }

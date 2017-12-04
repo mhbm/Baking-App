@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Lis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar menuToolbar = (Toolbar) findViewById(R.id.menu_toolbar);
+        Toolbar menuToolbar = findViewById(R.id.menu_toolbar);
         setSupportActionBar(menuToolbar);
         getSupportActionBar().setTitle(getString(R.string.menu_title));
 

@@ -29,10 +29,10 @@ import retrofit2.Response;
  * Created by lsitec101.macedo on 14/11/17.
  */
 
-public class RecipeFragment extends Fragment {
+public class RecipeIngredientsFragment extends Fragment {
 
     final static String GETRECIPES = "getRecipesFromRetroFit";
-    private final String TAG = RecipeFragment.class.getSimpleName();
+    private final String TAG = RecipeIngredientsFragment.class.getSimpleName();
     RecyclerView mRecyclerView;
     RecipeRetroFit mRecipeRetrofit;
 
