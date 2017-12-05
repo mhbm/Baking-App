@@ -1,5 +1,6 @@
 package com.example.android.bakingapp.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -8,17 +9,13 @@ import com.example.android.bakingapp.R;
 import com.example.android.bakingapp.adapter.RecipeAdapter;
 import com.example.android.bakingapp.data.RecipeModel;
 
-import java.util.ArrayList;
-
-public class MainActivity extends AppCompatActivity implements RecipeAdapter.ListItemClickListener{
-
-    static String ALL_RECIPES="All_Recipes";
-    static String SELECTED_RECIPES="Selected_Recipes";
-    static String SELECTED_STEPS="Selected_Steps";
-    static String SELECTED_INDEX="Selected_Index";
+public class MainActivity extends AppCompatActivity implements RecipeAdapter.ListItemClickListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
-
+    static String ALL_RECIPES = "All_Recipes";
+    static String SELECTED_RECIPES = "Selected_Recipes";
+    static String SELECTED_STEPS = "Selected_Steps";
+    static String SELECTED_INDEX = "Selected_Index";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,12 +31,12 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Lis
     public void onListItemClick(RecipeModel selectedItemIndex) {
 
         Bundle selectedRecipeBundle = new Bundle();
-        ArrayList<RecipeModel> selectedRecipe = new ArrayList<>();
-        selectedRecipe.add(selectedItemIndex);
-        selectedRecipeBundle.putParcelableArrayList(SELECTED_RECIPES,selectedRecipe);
-//        final Intent intent = new Intent(this, RecipeDetailActivity.class);
-//        intent.putExtras(selectedRecipeBundle);
-//        startActivity(intent);
+//        ArrayList<RecipeModel> selectedRecipe = new ArrayList<>();
+//        selectedRecipe.add(selectedItemIndex);
+        selectedRecipeBundle.putParcelable(SELECTED_RECIPES, selectedItemIndex);
+        final Intent intent = new Intent(this, DetailRecipeActivity.class);
+        intent.putExtras(selectedRecipeBundle);
+        startActivity(intent);
 
     }
 

@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.android.bakingapp.R;
+import com.example.android.bakingapp.data.IngredientModel;
 import com.example.android.bakingapp.data.RecipeModel;
 import com.example.android.bakingapp.data.StepModel;
 
@@ -21,15 +22,18 @@ public class DetailRecipeAdapter extends RecyclerView.Adapter<DetailRecipeAdapte
 
     final private ListItemClickListener mListItemClickListener;
     ArrayList<StepModel> mStepRecipe;
+    ArrayList<IngredientModel> mIngredientRecipe;
     private String recipeName;
+
 
     public DetailRecipeAdapter(ListItemClickListener listener) {
         mListItemClickListener = listener;
     }
 
-    public void setRecipeData(ArrayList<RecipeModel> recipe, Context context) {
-        mStepRecipe = recipe.get(0).getSteps();
-        recipeName = recipe.get(0).getName();
+    public void setRecipeData(RecipeModel recipe, Context context) {
+
+        mStepRecipe = recipe.getSteps();
+        recipeName = recipe.getName();
         notifyDataSetChanged();
     }
 
@@ -37,7 +41,7 @@ public class DetailRecipeAdapter extends RecyclerView.Adapter<DetailRecipeAdapte
     public RecyclerViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
         Context context = viewGroup.getContext();
 
-        int layoutIdForListItem = R.layout.activity_detail_recipe;
+        int layoutIdForListItem = R.layout.grid_recipe_ingredients_layout;
 
         LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(layoutIdForListItem, viewGroup, false);
@@ -50,7 +54,6 @@ public class DetailRecipeAdapter extends RecyclerView.Adapter<DetailRecipeAdapte
     @Override
     public void onBindViewHolder(RecyclerViewHolder holder, int position) {
         holder.textRecyclerView.setText(mStepRecipe.get(position).getId() + ". " + mStepRecipe.get(position).getShortDescription());
-
     }
 
     @Override
@@ -60,7 +63,7 @@ public class DetailRecipeAdapter extends RecyclerView.Adapter<DetailRecipeAdapte
     }
 
     public interface ListItemClickListener {
-        void onListItemClick(ArrayList<StepModel> stepRecipe, int clickItemIndex, String recipeName);
+        void onListItemClick(ArrayList<StepModel> stepModel, int clickItemIndex, String recipeName);
     }
 
     class RecyclerViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -69,7 +72,7 @@ public class DetailRecipeAdapter extends RecyclerView.Adapter<DetailRecipeAdapte
         public RecyclerViewHolder(View itemView) {
             super(itemView);
 
-            textRecyclerView = itemView.findViewById(R.id.tv_recipe_ingredients);
+            textRecyclerView = itemView.findViewById(R.id.tv_recipe_steps);
 
             itemView.setOnClickListener(this);
         }
