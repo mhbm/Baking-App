@@ -27,18 +27,16 @@ public class DetailRecipeFragment extends Fragment {
 
     RecyclerView mRecyclerView;
 
-    RecyclerView mRecyclerView2;
 
     static String SELECTED_RECIPES = "Selected_Recipes";
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_recipe_ingredients, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_recipe_detail_step_description, container, false);
 
-        mRecyclerView = rootView.findViewById(R.id.rv_recipe_ingredients);
+        mRecyclerView = rootView.findViewById(R.id.rv_recipe_step_description);
 
-        mRecyclerView2 = rootView.findViewById(R.id.rv_recipe_ingredients);
 
         final DetailRecipeAdapter recipeAdapter = new DetailRecipeAdapter((DetailRecipeActivity) getActivity());
 

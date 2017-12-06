@@ -8,15 +8,10 @@
     android:orientation="vertical"
     >
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/rv_recipe_ingredients"
-        android:layout_marginTop="10dp"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        />
+
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/rv_recipe_step_description1"
+        android:id="@+id/rv_recipe_step_description"
         android:layout_marginTop="10dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

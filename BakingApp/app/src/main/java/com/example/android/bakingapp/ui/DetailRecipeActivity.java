@@ -2,6 +2,7 @@ package com.example.android.bakingapp.ui;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.TextView;
 
 import com.example.android.bakingapp.R;
 import com.example.android.bakingapp.adapter.DetailRecipeAdapter;
@@ -22,11 +23,15 @@ public class DetailRecipeActivity extends AppCompatActivity implements DetailRec
 
     private static final String TAG = DetailRecipeActivity.class.getSimpleName();
 
+    TextView mTextViewIngredient;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_recipe);
+
+        mTextViewIngredient = findViewById(R.id.tv_recipe_ingredients);
 
         recipeModel = getIntent().getParcelableExtra(SELECTED_RECIPES);
 
@@ -40,14 +45,30 @@ public class DetailRecipeActivity extends AppCompatActivity implements DetailRec
                     .replace(R.id.step_container, detailRecipeFragment, SELECTED_RECIPES)
                     .addToBackStack(null)
                     .commit();
+
+            setIngredientList();
         }
 
 
 
-        recipeModel = getIntent().getParcelableExtra(SELECTED_RECIPES);
+
         System.out.println(recipeModel.getIngredients().get(1).getQuantity());
 
 
+    }
+
+
+    public void setIngredientList() {
+        String aux = "" ;
+        for (int i = 0; i < recipeModel.getIngredients().size(); i++) {
+            aux += "Ingredient : " + recipeModel.getIngredients().get(i).getIngredient() + "; Measure " + recipeModel.getIngredients().get(i).getMeasure() + "; Quantity: " + recipeModel.getIngredients().get(i).getQuantity();
+
+            if (i < recipeModel.getIngredients().size() -1 ) {
+                aux += "\n\n";
+            }
+        }
+
+        mTextViewIngredient.setText(aux);
     }
 
 
