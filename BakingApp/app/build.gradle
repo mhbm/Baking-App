@@ -44,6 +44,9 @@ dependencies {
 
     testCompile 'junit:junit:4.12'
 
+    //Exoplayer
+    compile 'com.google.android.exoplayer:exoplayer:2.+'
+
     compile 'com.android.support:design:23.1.1'
 
     compile 'com.android.support:support-v4:22.1.+'

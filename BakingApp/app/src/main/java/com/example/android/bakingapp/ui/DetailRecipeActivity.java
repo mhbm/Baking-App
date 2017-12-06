@@ -1,5 +1,6 @@
 package com.example.android.bakingapp.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
@@ -17,6 +18,8 @@ public class DetailRecipeActivity extends AppCompatActivity implements DetailRec
 
 
     static String SELECTED_RECIPES="Selected_Recipes";
+    static String SELECTED_STEP="Selected_STEP";
+    static String SELECTED_POSITION = "Selected_POSITION";
 
     RecipeModel recipeModel = new RecipeModel();
 
@@ -87,6 +90,14 @@ public class DetailRecipeActivity extends AppCompatActivity implements DetailRec
 
     @Override
     public void onListItemClick(ArrayList<StepModel> stepModel, int clickItemIndex, String recipeName) {
+        Bundle selectedRecipeBundle = new Bundle();
+//        ArrayList<RecipeModel> selectedRecipe = new ArrayList<>();
+//        selectedRecipe.add(selectedItemIndex);
+        selectedRecipeBundle.putParcelableArrayList(SELECTED_STEP, stepModel);
+        selectedRecipeBundle.putInt(SELECTED_POSITION, clickItemIndex);
+        final Intent intent = new Intent(this, StepViewActivity.class);
+        intent.putExtras(selectedRecipeBundle);
+        startActivity(intent);
 
     }
 }
