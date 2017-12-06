@@ -32,9 +32,7 @@ import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 
 import java.net.MalformedURLException;
-import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.ArrayList;
 
 /**
@@ -77,23 +75,29 @@ public class StepViewActivity extends AppCompatActivity implements ExoPlayer.Eve
         mPosition = getIntent().getIntExtra(SELECTED_POSITION, 0);
 
 
-        // Initialize the player.
-        URL url = null;
-        try {
-            url = new URL(mSteps.get(mPosition).getVideoURL());
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
-        URI uri = null;
-        try {
-            if (url != null) {
-                uri = url.toURI();
-            }
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
-        initializePlayer(Uri.parse(String.valueOf(uri)));
+//        // Initialize the player.
+//        URL url = null;
+//        try {
+//            url = new URL(mSteps.get(mPosition).getVideoURL());
+//        } catch (MalformedURLException e) {
+//            e.printStackTrace();
+//        }
+//        URI uri = null;
+//
+//        try {
+//            if (url != null) {
+//                uri = url.toURI();
+//            }
+//        } catch (URISyntaxException e) {
+//            e.printStackTrace();
+//        }
+//        initializePlayer(Uri.parse(String.valueOf(uri)), false);
 
+        if (!mSteps.get(mPosition).getVideoURL().isEmpty()) {
+            initializePlayer(makeURIVideo(mSteps.get(mPosition).getVideoURL()), false);
+        } else {
+            toast.makeText(getBaseContext(), "This step doesn't have a video!", Toast.LENGTH_SHORT).show();
+        }
 
         try {
             setDesignThisActivity();
@@ -111,8 +115,16 @@ public class StepViewActivity extends AppCompatActivity implements ExoPlayer.Eve
                 if (mPosition < 1) {
                     toast.makeText(getBaseContext(), "This is the first step!", Toast.LENGTH_SHORT).show();
                 } else {
+                    mExoPlayer.stop();
 
+//                    initializePlayer(Uri.parse(String.valueOf(uri)), false);
                     mPosition--;
+                    if (!mSteps.get(mPosition).getVideoURL().isEmpty()) {
+                        initializePlayer(makeURIVideo(mSteps.get(mPosition).getVideoURL()), true);
+                    } else {
+                        mExoPlayer.stop();
+                        toast.makeText(getBaseContext(), "This step doesn't have a video!", Toast.LENGTH_SHORT).show();
+                    }
                     try {
                         setDesignThisActivity();
                     } catch (MalformedURLException e) {
@@ -131,8 +143,14 @@ public class StepViewActivity extends AppCompatActivity implements ExoPlayer.Eve
                 if (mPosition > mSteps.size() - 2) {
                     toast.makeText(getBaseContext(), "This is the last step!", Toast.LENGTH_SHORT).show();
                 } else {
-                    
                     mPosition++;
+                    System.out.println("erooooo" + mSteps.get(mPosition).getVideoURL());
+                    if (!mSteps.get(mPosition).getVideoURL().isEmpty()) {
+                        initializePlayer(makeURIVideo(mSteps.get(mPosition).getVideoURL()), true);
+                    } else {
+                        mExoPlayer.stop();
+                        toast.makeText(getBaseContext(), "This step doesn't have a video!", Toast.LENGTH_SHORT).show();
+                    }
                     try {
                         setDesignThisActivity();
                     } catch (MalformedURLException e) {
@@ -146,9 +164,11 @@ public class StepViewActivity extends AppCompatActivity implements ExoPlayer.Eve
     }
 
 
+    public Uri makeURIVideo(String urlString) {
+        return Uri.parse(urlString);
+    }
+
     public void setDesignThisActivity() throws MalformedURLException, URISyntaxException {
-
-
         mTextViewStepDescription.setText(mSteps.get(mPosition).getDescription());
     }
 
@@ -186,7 +206,7 @@ public class StepViewActivity extends AppCompatActivity implements ExoPlayer.Eve
     }
 
 
-    private void initializePlayer(Uri mediaUri) {
+    private void initializePlayer(Uri mediaUri, boolean work) {
         if (mExoPlayer == null) {
             // Create an instance of the ExoPlayer.
             TrackSelector trackSelector = new DefaultTrackSelector();
@@ -203,6 +223,15 @@ public class StepViewActivity extends AppCompatActivity implements ExoPlayer.Eve
                     this, userAgent), new DefaultExtractorsFactory(), null, null);
             mExoPlayer.prepare(mediaSource);
             mExoPlayer.setPlayWhenReady(true);
+        } else if (work) {
+            // Prepare the MediaSource.
+            mPlayerView.setPlayer(mExoPlayer);
+            String userAgent = Util.getUserAgent(this, "BakingApp");
+            MediaSource mediaSource = new ExtractorMediaSource(mediaUri, new DefaultDataSourceFactory(
+                    this, userAgent), new DefaultExtractorsFactory(), null, null);
+            mExoPlayer.prepare(mediaSource);
+            mExoPlayer.setPlayWhenReady(true);
+
         }
     }
 
