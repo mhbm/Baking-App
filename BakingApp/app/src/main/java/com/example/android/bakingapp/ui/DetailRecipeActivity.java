@@ -1,6 +1,7 @@
 package com.example.android.bakingapp.ui;
 
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
 
@@ -57,6 +58,19 @@ public class DetailRecipeActivity extends AppCompatActivity implements DetailRec
 
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
+        setIngredientList();
+        super.onSaveInstanceState(outState, outPersistentState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        if (savedInstanceState != null) {
+            setIngredientList();
+        }
+        super.onRestoreInstanceState(savedInstanceState);
+    }
 
     public void setIngredientList() {
         String aux = "" ;
@@ -70,15 +84,6 @@ public class DetailRecipeActivity extends AppCompatActivity implements DetailRec
 
         mTextViewIngredient.setText(aux);
     }
-
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-    }
-
-
-
 
     @Override
     public void onListItemClick(ArrayList<StepModel> stepModel, int clickItemIndex, String recipeName) {
