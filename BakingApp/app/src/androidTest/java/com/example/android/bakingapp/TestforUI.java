@@ -43,11 +43,35 @@ public class TestforUI {
         Espresso.registerIdlingResources(mIdlingResource);
     }
 
+    @Test
+    public void checkFirstPositiononRecipe() {
+        onView(ViewMatchers.withId(R.id.rv_recipe)).perform(RecyclerViewActions.scrollToPosition(0));
+        onView(withText("Nutella Pie")).check(matches(isDisplayed()));
+    }
+    @Test
+    public void checkSecondPositiononRecipe() {
+        onView(ViewMatchers.withId(R.id.rv_recipe)).perform(RecyclerViewActions.scrollToPosition(1));
+        onView(withText("Brownies")).check(matches(isDisplayed()));
+    }
 
     @Test
-    public void checkRecyclerViewRecipeText() {
+    public void checkThirdPositiononRecipe() {
         onView(ViewMatchers.withId(R.id.rv_recipe)).perform(RecyclerViewActions.scrollToPosition(2));
         onView(withText("Yellow Cake")).check(matches(isDisplayed()));
+    }
+
+
+    @Test
+    public void checkFourthPositiononRecipe() {
+        onView(ViewMatchers.withId(R.id.rv_recipe)).perform(RecyclerViewActions.scrollToPosition(3));
+        onView(withText("Cheesecake")).check(matches(isDisplayed()));
+    }
+
+    //This test will be failed
+    @Test
+    public void checkfailPositiononRecipe() {
+        onView(ViewMatchers.withId(R.id.rv_recipe)).perform(RecyclerViewActions.scrollToPosition(0));
+        onView(withText("Nothing")).check(matches(isDisplayed()));
     }
 
 

@@ -3,7 +3,6 @@ package com.example.android.bakingapp.ui;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
 import android.support.test.espresso.IdlingResource;
 import android.support.v7.app.AppCompatActivity;
@@ -33,7 +32,7 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Lis
     RecyclerView mRecyclerView;
     RecipeRetroFit mRecipeRetrofit;
 
-    @Nullable
+
     private SimpleIdlingResource mIdlingResource;
 
 
@@ -65,7 +64,8 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Lis
 
         mRecipeRetrofit = RetroFitBulder.Retrieve();
         Call<ArrayList<RecipeModel>> recipesJSON = mRecipeRetrofit.getRecipe();
-
+        mIdlingResource = new SimpleIdlingResource();
+        mIdlingResource.setIdleState(false);
         recipesJSON.enqueue(new Callback<ArrayList<RecipeModel>>() {
             @Override
             public void onResponse(Call<ArrayList<RecipeModel>> call, Response<ArrayList<RecipeModel>> response) {
@@ -76,6 +76,7 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Lis
                 bundle.putParcelableArrayList(GETRECIPES, recipesFromJson);
 
                 recipeAdapter.setRecipeData(recipesFromJson, getBaseContext());
+                mIdlingResource.setIdleState(true);
             }
 
             @Override
