@@ -5,7 +5,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -23,12 +22,9 @@ import com.example.android.bakingapp.ui.DetailRecipeActivity;
 
 public class DetailRecipeFragment extends Fragment {
 
-    private final String TAG = DetailRecipeFragment.class.getSimpleName();
-
-    RecyclerView mRecyclerView;
-
-
     static String SELECTED_RECIPES = "Selected_Recipes";
+    private final String TAG = DetailRecipeFragment.class.getSimpleName();
+    RecyclerView mRecyclerView;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
@@ -42,13 +38,8 @@ public class DetailRecipeFragment extends Fragment {
 
         mRecyclerView.setAdapter(recipeAdapter);
 
-        if (rootView.getTag() != null && rootView.getTag().equals("phone-land")) {
-            GridLayoutManager mLayoutManager = new GridLayoutManager(getContext(), 5);
-            mRecyclerView.setLayoutManager(mLayoutManager);
-        } else {
-            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
-            mRecyclerView.setLayoutManager(linearLayoutManager);
-        }
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+        mRecyclerView.setLayoutManager(linearLayoutManager);
 
 
         Bundle bundle = this.getArguments();
