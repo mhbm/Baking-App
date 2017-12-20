@@ -7,20 +7,31 @@ import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
 import android.support.test.espresso.IdlingResource;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 
 import com.example.android.bakingapp.R;
 import com.example.android.bakingapp.adapter.RecipeAdapter;
 import com.example.android.bakingapp.data.RecipeModel;
+import com.example.android.bakingapp.retrofit.RecipeRetroFit;
+import com.example.android.bakingapp.retrofit.RetroFitBulder;
 import com.example.android.bakingapp.utilitaries.SimpleIdlingResource;
+
+import java.util.ArrayList;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity implements RecipeAdapter.ListItemClickListener {
 
+    final static String GETRECIPES = "getRecipesFromRetroFit";
     private static final String TAG = MainActivity.class.getSimpleName();
-    static String ALL_RECIPES = "All_Recipes";
     static String SELECTED_RECIPES = "Selected_Recipes";
-    static String SELECTED_STEPS = "Selected_Steps";
-    static String SELECTED_INDEX = "Selected_Index";
+    RecyclerView mRecyclerView;
+    RecipeRetroFit mRecipeRetrofit;
 
     @Nullable
     private SimpleIdlingResource mIdlingResource;
@@ -42,6 +53,37 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Lis
         Toolbar menuToolbar = findViewById(R.id.menu_toolbar);
         setSupportActionBar(menuToolbar);
         getSupportActionBar().setTitle(getString(R.string.menu_title));
+
+        mRecyclerView = findViewById(R.id.rv_recipe);
+        final RecipeAdapter recipeAdapter = new RecipeAdapter(this);
+
+        mRecyclerView.setAdapter(recipeAdapter);
+
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+
+        mRecyclerView.setLayoutManager(linearLayoutManager);
+
+        mRecipeRetrofit = RetroFitBulder.Retrieve();
+        Call<ArrayList<RecipeModel>> recipesJSON = mRecipeRetrofit.getRecipe();
+
+        recipesJSON.enqueue(new Callback<ArrayList<RecipeModel>>() {
+            @Override
+            public void onResponse(Call<ArrayList<RecipeModel>> call, Response<ArrayList<RecipeModel>> response) {
+
+                ArrayList<RecipeModel> recipesFromJson = response.body();
+
+                Bundle bundle = new Bundle();
+                bundle.putParcelableArrayList(GETRECIPES, recipesFromJson);
+
+                recipeAdapter.setRecipeData(recipesFromJson, getBaseContext());
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<RecipeModel>> call, Throwable t) {
+                Log.d(TAG, "onFailure: " + t.getMessage());
+            }
+        });
+
 
         getIdlingResource();
 
