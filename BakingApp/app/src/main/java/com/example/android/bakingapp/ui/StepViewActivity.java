@@ -48,9 +48,15 @@ public class StepViewActivity extends AppCompatActivity implements ExoPlayer.Eve
 
     static String SELECTED_STEP = "Selected_STEP";
     static String SELECTED_POSITION = "Selected_POSITION";
+    static String SELECTED_TIME_VIDEO_EXOPLAYER = "Selected_TIME_EXOPLAYER";
+
+
     private static MediaSessionCompat mMediaSession;
     ArrayList<StepModel> mSteps;
     int mPosition;
+    long mPositionVideo;
+
+
     Button mPrevButton;
     Button mNextButton;
     Toast toast;
@@ -74,9 +80,6 @@ public class StepViewActivity extends AppCompatActivity implements ExoPlayer.Eve
         // Initialize the player view.
         mPlayerView = findViewById(R.id.playerView);
 
-        mSteps = getIntent().getParcelableArrayListExtra(SELECTED_STEP);
-        mPosition = getIntent().getIntExtra(SELECTED_POSITION, 0);
-
 
 //        // Initialize the player.
 //        URL url = null;
@@ -95,6 +98,15 @@ public class StepViewActivity extends AppCompatActivity implements ExoPlayer.Eve
 //            e.printStackTrace();
 //        }
 //        initializePlayer(Uri.parse(String.valueOf(uri)), false);
+
+        if (savedInstanceState != null) {
+            mPosition = savedInstanceState.getInt(SELECTED_POSITION);
+            mSteps = savedInstanceState.getParcelableArrayList(SELECTED_STEP);
+            mPositionVideo = savedInstanceState.getLong(SELECTED_TIME_VIDEO_EXOPLAYER);
+        } else {
+            mSteps = getIntent().getParcelableArrayListExtra(SELECTED_STEP);
+            mPosition = getIntent().getIntExtra(SELECTED_POSITION, 0);
+        }
 
 
         ///put the thumbnail into ExoPlayer
@@ -193,6 +205,35 @@ public class StepViewActivity extends AppCompatActivity implements ExoPlayer.Eve
         mTextViewStepDescription.setText(mSteps.get(mPosition).getDescription());
     }
 
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (mExoPlayer != null) {
+            mExoPlayer.stop();
+            mExoPlayer.release();
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (mExoPlayer != null) {
+            mExoPlayer.stop();
+            mExoPlayer.release();
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle bundleOut) {
+        if (mSteps != null) {
+            bundleOut.putParcelableArrayList(SELECTED_STEP, mSteps);
+            bundleOut.putInt(SELECTED_POSITION, mPosition);
+        }
+        if (mExoPlayer != null)
+            bundleOut.putLong(SELECTED_TIME_VIDEO_EXOPLAYER, mExoPlayer.getCurrentPosition());
+
+        super.onSaveInstanceState(bundleOut);
+    }
 
     private void initializeMediaSession() {
 
@@ -242,6 +283,7 @@ public class StepViewActivity extends AppCompatActivity implements ExoPlayer.Eve
             String userAgent = Util.getUserAgent(this, "BakingApp");
             MediaSource mediaSource = new ExtractorMediaSource(mediaUri, new DefaultDataSourceFactory(
                     this, userAgent), new DefaultExtractorsFactory(), null, null);
+            mExoPlayer.seekTo(mPositionVideo);
             mExoPlayer.prepare(mediaSource);
             mExoPlayer.setPlayWhenReady(true);
         } else if (work) {
@@ -250,6 +292,7 @@ public class StepViewActivity extends AppCompatActivity implements ExoPlayer.Eve
             String userAgent = Util.getUserAgent(this, "BakingApp");
             MediaSource mediaSource = new ExtractorMediaSource(mediaUri, new DefaultDataSourceFactory(
                     this, userAgent), new DefaultExtractorsFactory(), null, null);
+            mExoPlayer.seekTo(mPositionVideo);
             mExoPlayer.prepare(mediaSource);
             mExoPlayer.setPlayWhenReady(true);
 
