@@ -1,5 +1,6 @@
 package com.example.android.bakingapp.ui;
 
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.media.session.MediaSessionCompat;
@@ -30,7 +31,9 @@ import com.google.android.exoplayer2.trackselection.TrackSelector;
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
+import com.squareup.picasso.Picasso;
 
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -92,6 +95,24 @@ public class StepViewActivity extends AppCompatActivity implements ExoPlayer.Eve
 //            e.printStackTrace();
 //        }
 //        initializePlayer(Uri.parse(String.valueOf(uri)), false);
+
+
+        ///put the thumbnail into ExoPlayer
+        if (mSteps.get(mPosition).getThumbnailURL() != null && !mSteps.get(mPosition).getThumbnailURL().equals("")) {
+            final Uri thumbnailUri = makeURIVideo(mSteps.get(mPosition).getThumbnailURL()).buildUpon().build();
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        Bitmap thumbnail;
+                        thumbnail = Picasso.with(getBaseContext()).load(thumbnailUri).get();
+                        mPlayerView.setDefaultArtwork(thumbnail);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }).start();
+        }
 
         if (!mSteps.get(mPosition).getVideoURL().isEmpty()) {
             initializePlayer(makeURIVideo(mSteps.get(mPosition).getVideoURL()), false);
