@@ -85,24 +85,6 @@ public class StepViewActivity extends AppCompatActivity implements ExoPlayer.Eve
         mPlayerView = findViewById(R.id.playerView);
 
 
-//        // Initialize the player.
-//        URL url = null;
-//        try {
-//            url = new URL(mSteps.get(mPosition).getVideoURL());
-//        } catch (MalformedURLException e) {
-//            e.printStackTrace();
-//        }
-//        URI uri = null;
-//
-//        try {
-//            if (url != null) {
-//                uri = url.toURI();
-//            }
-//        } catch (URISyntaxException e) {
-//            e.printStackTrace();
-//        }
-//        initializePlayer(Uri.parse(String.valueOf(uri)), false);
-
         if (savedInstanceState != null) {
             mPosition = savedInstanceState.getInt(SELECTED_POSITION);
             mSteps = savedInstanceState.getParcelableArrayList(SELECTED_STEP);
@@ -149,6 +131,7 @@ public class StepViewActivity extends AppCompatActivity implements ExoPlayer.Eve
 
             @Override
             public void onClick(View view) {
+                mPositionVideo = 0;
                 if (mPosition < 1) {
                     toast.makeText(getBaseContext(), "This is the first step!", Toast.LENGTH_SHORT).show();
                 } else {
@@ -177,6 +160,7 @@ public class StepViewActivity extends AppCompatActivity implements ExoPlayer.Eve
 
             @Override
             public void onClick(View view) {
+                mPositionVideo = 0;
                 if (mPosition > mSteps.size() - 2) {
                     toast.makeText(getBaseContext(), "This is the last step!", Toast.LENGTH_SHORT).show();
                 } else {
