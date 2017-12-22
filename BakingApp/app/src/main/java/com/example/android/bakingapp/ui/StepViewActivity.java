@@ -1,5 +1,6 @@
 package com.example.android.bakingapp.ui;
 
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -25,10 +26,13 @@ import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
 import com.google.android.exoplayer2.source.ExtractorMediaSource;
 import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.source.TrackGroupArray;
+import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
+import com.google.android.exoplayer2.trackselection.TrackSelection;
 import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
 import com.google.android.exoplayer2.trackselection.TrackSelector;
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
+import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 import com.squareup.picasso.Picasso;
@@ -205,6 +209,8 @@ public class StepViewActivity extends AppCompatActivity implements ExoPlayer.Eve
         mTextViewStepDescription.setText(mSteps.get(mPosition).getDescription());
     }
 
+
+
     @Override
     public void onStop() {
         super.onStop();
@@ -216,11 +222,24 @@ public class StepViewActivity extends AppCompatActivity implements ExoPlayer.Eve
 
     @Override
     public void onPause() {
+        SharedPreferences sharedPreferences = getSharedPreferences("positionVideo", MODE_PRIVATE);
+        SharedPreferences.Editor edit = sharedPreferences.edit();
+        edit.putLong("timePositionVideo", mExoPlayer.getCurrentPosition());
+        edit.commit();
         super.onPause();
         if (mExoPlayer != null) {
             mExoPlayer.stop();
             mExoPlayer.release();
         }
+    }
+
+    @Override
+    protected void onResume() {
+        SharedPreferences sharedPreferences = getSharedPreferences("positionVideo", MODE_PRIVATE);
+        long test  = sharedPreferences.getLong("timePositionVideo", 0);
+        mPositionVideo = test;
+        initializePlayer(makeURIVideo(mSteps.get(mPosition).getVideoURL()), false);
+        super.onResume();
     }
 
     @Override
@@ -270,6 +289,7 @@ public class StepViewActivity extends AppCompatActivity implements ExoPlayer.Eve
 
     private void initializePlayer(Uri mediaUri, boolean work) {
         if (mExoPlayer == null) {
+            System.out.println("aquiii");
             // Create an instance of the ExoPlayer.
             TrackSelector trackSelector = new DefaultTrackSelector();
             LoadControl loadControl = new DefaultLoadControl();
@@ -287,6 +307,7 @@ public class StepViewActivity extends AppCompatActivity implements ExoPlayer.Eve
             mExoPlayer.prepare(mediaSource);
             mExoPlayer.setPlayWhenReady(true);
         } else if (work) {
+            System.out.println("aquiii2222");
             // Prepare the MediaSource.
             mPlayerView.setPlayer(mExoPlayer);
             String userAgent = Util.getUserAgent(this, "BakingApp");
@@ -296,6 +317,19 @@ public class StepViewActivity extends AppCompatActivity implements ExoPlayer.Eve
             mExoPlayer.prepare(mediaSource);
             mExoPlayer.setPlayWhenReady(true);
 
+        } else {
+            ///THIS CODE WORKS WHEN THE APP IS ONPAUSED AND AFTER ON RESUME
+            TrackSelection.Factory videoTrackSelectionFactory = new AdaptiveTrackSelection.Factory(new DefaultBandwidthMeter());
+            DefaultTrackSelector trackSelector = new DefaultTrackSelector(videoTrackSelectionFactory);
+
+            mExoPlayer = ExoPlayerFactory.newSimpleInstance(getBaseContext(), trackSelector);
+            mPlayerView.setPlayer(mExoPlayer);
+            String userAgent = Util.getUserAgent(this, "BakingApp");
+            MediaSource mediaSource = new ExtractorMediaSource(mediaUri, new DefaultDataSourceFactory(
+                    this, userAgent), new DefaultExtractorsFactory(), null, null);
+            mExoPlayer.seekTo(mPositionVideo);
+            mExoPlayer.prepare(mediaSource);
+            mExoPlayer.setPlayWhenReady(true);
         }
     }
 
