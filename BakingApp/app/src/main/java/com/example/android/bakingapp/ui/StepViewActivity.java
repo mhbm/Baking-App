@@ -222,7 +222,7 @@ public class StepViewActivity extends AppCompatActivity implements ExoPlayer.Eve
         SharedPreferences sharedPreferences = getSharedPreferences("positionVideo", MODE_PRIVATE);
         long test  = sharedPreferences.getLong("timePositionVideo", 0);
         mPositionVideo = test;
-        initializePlayer(makeURIVideo(mSteps.get(mPosition).getVideoURL()), false);
+//        initializePlayer(makeURIVideo(mSteps.get(mPosition).getVideoURL()), false);
         super.onResume();
     }
 
