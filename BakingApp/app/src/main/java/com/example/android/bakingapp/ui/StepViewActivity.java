@@ -1,5 +1,6 @@
 package com.example.android.bakingapp.ui;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -56,18 +57,18 @@ public class StepViewActivity extends AppCompatActivity implements ExoPlayer.Eve
 
 
     private static MediaSessionCompat mMediaSession;
-    ArrayList<StepModel> mSteps;
-    int mPosition;
-    long mPositionVideo;
+    static ArrayList<StepModel> mSteps;
+    static int mPosition;
+    static  long mPositionVideo;
 
 
-    Button mPrevButton;
-    Button mNextButton;
-    Toast toast;
-    TextView mTextViewStepDescription;
-    private SimpleExoPlayer mExoPlayer;
-    private SimpleExoPlayerView mPlayerView;
-    private PlaybackStateCompat.Builder mStateBuilder;
+    static Button mPrevButton;
+    static Button mNextButton;
+    static Toast toast;
+    static TextView mTextViewStepDescription;
+    private static SimpleExoPlayer mExoPlayer;
+    private static SimpleExoPlayerView mPlayerView;
+    private static PlaybackStateCompat.Builder mStateBuilder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,7 +80,7 @@ public class StepViewActivity extends AppCompatActivity implements ExoPlayer.Eve
         mNextButton = findViewById(R.id.button_next);
 
         // Initialize the Media Session.
-        initializeMediaSession();
+        initializeMediaSession(getBaseContext());
 
         // Initialize the player view.
         mPlayerView = findViewById(R.id.playerView);
@@ -185,12 +186,16 @@ public class StepViewActivity extends AppCompatActivity implements ExoPlayer.Eve
     }
 
 
-    public Uri makeURIVideo(String urlString) {
+    public static Uri makeURIVideo(String urlString) {
         return Uri.parse(urlString);
     }
 
-    public void setDesignThisActivity() throws MalformedURLException, URISyntaxException {
+    public static void setDesignThisActivity() throws MalformedURLException, URISyntaxException {
+        System.out.println(mSteps.toString());
+        System.out.println(mPosition);
+        System.out.println(mSteps.get(mPosition).getDescription());
         mTextViewStepDescription.setText(mSteps.get(mPosition).getDescription());
+        System.out.println("saiuuuuuuuuuu");
     }
 
 
@@ -238,10 +243,10 @@ public class StepViewActivity extends AppCompatActivity implements ExoPlayer.Eve
         super.onSaveInstanceState(bundleOut);
     }
 
-    private void initializeMediaSession() {
+    public static void initializeMediaSession(Context context) {
 
         // Create a MediaSessionCompat.
-        mMediaSession = new MediaSessionCompat(this, TAG);
+        mMediaSession = new MediaSessionCompat(context, TAG);
 
         // Enable callbacks from MediaButtons and TransportControls.
         mMediaSession.setFlags(
@@ -291,7 +296,7 @@ public class StepViewActivity extends AppCompatActivity implements ExoPlayer.Eve
             mExoPlayer.prepare(mediaSource);
             mExoPlayer.setPlayWhenReady(true);
         } else if (work) {
-            System.out.println("aquiii2222");
+
             // Prepare the MediaSource.
             mPlayerView.setPlayer(mExoPlayer);
             String userAgent = Util.getUserAgent(this, "BakingApp");
@@ -377,7 +382,7 @@ public class StepViewActivity extends AppCompatActivity implements ExoPlayer.Eve
     }
 
 
-    private class MySessionCallback extends MediaSessionCompat.Callback {
+    private static class MySessionCallback extends MediaSessionCompat.Callback {
         @Override
         public void onPlay() {
             mExoPlayer.setPlayWhenReady(true);
