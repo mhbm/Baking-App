@@ -14,24 +14,29 @@ import com.example.android.bakingapp.fragment.DetailRecipeFragment;
 
 import java.util.ArrayList;
 
-public class DetailRecipeActivity extends AppCompatActivity implements DetailRecipeAdapter.ListItemClickListener{
 
+public class DetailRecipeActivity extends AppCompatActivity implements DetailRecipeAdapter.ListItemClickListener {
 
-    static String SELECTED_RECIPES="Selected_Recipes";
-    static String SELECTED_STEP="Selected_STEP";
-    static String SELECTED_POSITION = "Selected_POSITION";
-
-    RecipeModel recipeModel = new RecipeModel();
-
-    DetailRecipeFragment detailRecipeFragment;
 
     private static final String TAG = DetailRecipeActivity.class.getSimpleName();
-
+    static String SELECTED_RECIPES = "Selected_Recipes";
+    static String SELECTED_STEP = "Selected_STEP";
+    static String SELECTED_POSITION = "Selected_POSITION";
+    RecipeModel recipeModel = new RecipeModel();
+    DetailRecipeFragment detailRecipeFragment;
     TextView mTextViewIngredient;
+
+    private boolean tabletLayout;
+
+    private Bundle mBundle;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        tabletLayout = getResources().getBoolean(R.bool.tabletLayout);
+
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_recipe);
 
@@ -54,11 +59,9 @@ public class DetailRecipeActivity extends AppCompatActivity implements DetailRec
         }
 
 
-
-
-        System.out.println(recipeModel.getIngredients().get(1).getQuantity());
-
-
+        if (tabletLayout) {
+            setContentView(R.layout.activity_step_view);
+        }
     }
 
     @Override
@@ -76,11 +79,11 @@ public class DetailRecipeActivity extends AppCompatActivity implements DetailRec
     }
 
     public void setIngredientList() {
-        String aux = "" ;
+        String aux = "";
         for (int i = 0; i < recipeModel.getIngredients().size(); i++) {
             aux += "Ingredient : " + recipeModel.getIngredients().get(i).getIngredient() + "; Measure " + recipeModel.getIngredients().get(i).getMeasure() + "; Quantity: " + recipeModel.getIngredients().get(i).getQuantity();
 
-            if (i < recipeModel.getIngredients().size() -1 ) {
+            if (i < recipeModel.getIngredients().size() - 1) {
                 aux += "\n\n";
             }
         }
@@ -91,13 +94,14 @@ public class DetailRecipeActivity extends AppCompatActivity implements DetailRec
     @Override
     public void onListItemClick(ArrayList<StepModel> stepModel, int clickItemIndex, String recipeName) {
         Bundle selectedRecipeBundle = new Bundle();
-//        ArrayList<RecipeModel> selectedRecipe = new ArrayList<>();
-//        selectedRecipe.add(selectedItemIndex);
         selectedRecipeBundle.putParcelableArrayList(SELECTED_STEP, stepModel);
         selectedRecipeBundle.putInt(SELECTED_POSITION, clickItemIndex);
-        final Intent intent = new Intent(this, StepViewActivity.class);
-        intent.putExtras(selectedRecipeBundle);
-        startActivity(intent);
+
+        if (!tabletLayout) {
+            final Intent intent = new Intent(this, StepViewActivity.class);
+            intent.putExtras(selectedRecipeBundle);
+            startActivity(intent);
+        }
 
     }
 }
