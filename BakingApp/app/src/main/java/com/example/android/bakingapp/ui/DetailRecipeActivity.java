@@ -14,9 +14,11 @@ import android.widget.Toast;
 
 import com.example.android.bakingapp.R;
 import com.example.android.bakingapp.adapter.DetailRecipeAdapter;
+import com.example.android.bakingapp.data.IngredientModel;
 import com.example.android.bakingapp.data.RecipeModel;
 import com.example.android.bakingapp.data.StepModel;
 import com.example.android.bakingapp.fragment.DetailRecipeFragment;
+import com.example.android.bakingapp.widget.UpdateServiceWidget;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.ExoPlayerFactory;
@@ -76,7 +78,6 @@ public class DetailRecipeActivity extends AppCompatActivity implements DetailRec
 
     private Bundle savedInstanceState;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -106,6 +107,33 @@ public class DetailRecipeActivity extends AppCompatActivity implements DetailRec
 
         this.savedInstanceState = savedInstanceState;
 
+        if (recipeModel != null) {
+            putIngredientIntoWidget(recipeModel.getIngredients());
+        }
+    }
+
+
+    public void putIngredientIntoWidget (ArrayList<IngredientModel> ingredientListParameter) {
+
+        if (ingredientListParameter != null ) {
+            ArrayList<String> ingredientListString = new ArrayList<>();
+
+            //Title of RECIPE
+            ingredientListString.add(recipeModel.getName() + "\n");
+
+            for (int i = 0; i < ingredientListParameter.size(); i++) {
+                IngredientModel ingredientModel = ingredientListParameter.get(i);
+
+                String aux = "Ingredient : " + ingredientModel.getIngredient() + "; Measure " + ingredientModel.getMeasure() + "; Quantity: " + ingredientModel.getQuantity();
+
+                if (i < recipeModel.getIngredients().size() - 1) {
+                    aux += "\n";
+                }
+
+                ingredientListString.add(aux);
+            }
+            UpdateServiceWidget.startWdigetService(ingredientListString, getBaseContext());
+        }
     }
 
     @Override

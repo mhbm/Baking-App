@@ -2,6 +2,7 @@ package com.example.android.bakingapp.widget;
 
 import android.app.IntentService;
 import android.appwidget.AppWidgetManager;
+import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.Nullable;
 
@@ -30,5 +31,11 @@ public class UpdateServiceWidget extends IntentService {
         intentUpdateWidget.putExtra(GET_LIST_INGREDIENTS, listOfIngredient);
 
         sendBroadcast(intentUpdateWidget);
+    }
+
+    public static void startWdigetService(ArrayList<String> ingredientList, Context context) {
+        Intent intent = new Intent(context, UpdateServiceWidget.class);
+        intent.putExtra(GET_LIST_INGREDIENTS, ingredientList);
+        context.startService(intent);
     }
 }

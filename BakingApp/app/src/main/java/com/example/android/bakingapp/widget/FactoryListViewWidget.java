@@ -65,7 +65,7 @@ public class FactoryListViewWidget implements RemoteViewsService.RemoteViewsFact
         if (mIngredientList != null) {
             remoteViews.setTextViewText(R.id.tv_widget_ingredient_title, mIngredientList.get(i));
         } else {
-            remoteViews.setTextViewText(R.id.tv_widget_ingredient_title, "None data");
+            remoteViews.setTextViewText(R.id.tv_widget_ingredient_title, "None data to display!");
         }
 
         Intent intent = new Intent();
