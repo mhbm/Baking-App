@@ -54,21 +54,61 @@ public class StepViewActivity extends AppCompatActivity implements ExoPlayer.Eve
     static String SELECTED_STEP = "Selected_STEP";
     static String SELECTED_POSITION = "Selected_POSITION";
     static String SELECTED_TIME_VIDEO_EXOPLAYER = "Selected_TIME_EXOPLAYER";
-
-
-    private static MediaSessionCompat mMediaSession;
     static ArrayList<StepModel> mSteps;
     static int mPosition;
-    static  long mPositionVideo;
-
-
+    static long mPositionVideo;
     static Button mPrevButton;
     static Button mNextButton;
     static Toast toast;
     static TextView mTextViewStepDescription;
+    private static MediaSessionCompat mMediaSession;
     private static SimpleExoPlayer mExoPlayer;
     private static SimpleExoPlayerView mPlayerView;
     private static PlaybackStateCompat.Builder mStateBuilder;
+
+    public static Uri makeURIVideo(String urlString) {
+        return Uri.parse(urlString);
+    }
+
+    public static void setDesignThisActivity() throws MalformedURLException, URISyntaxException {
+        System.out.println(mSteps.toString());
+        System.out.println(mPosition);
+        System.out.println(mSteps.get(mPosition).getDescription());
+        mTextViewStepDescription.setText(mSteps.get(mPosition).getDescription());
+        System.out.println("saiuuuuuuuuuu");
+    }
+
+    public static void initializeMediaSession(Context context) {
+
+        // Create a MediaSessionCompat.
+        mMediaSession = new MediaSessionCompat(context, TAG);
+
+        // Enable callbacks from MediaButtons and TransportControls.
+        mMediaSession.setFlags(
+                MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS |
+                        MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS);
+
+        // Do not let MediaButtons restart the player when the app is not visible.
+        mMediaSession.setMediaButtonReceiver(null);
+
+        // Set an initial PlaybackState with ACTION_PLAY, so media buttons can start the player.
+        mStateBuilder = new PlaybackStateCompat.Builder()
+                .setActions(
+                        PlaybackStateCompat.ACTION_PLAY |
+                                PlaybackStateCompat.ACTION_PAUSE |
+                                PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS |
+                                PlaybackStateCompat.ACTION_PLAY_PAUSE);
+
+        mMediaSession.setPlaybackState(mStateBuilder.build());
+
+
+        // MySessionCallback has methods that handle callbacks from a media controller.
+        mMediaSession.setCallback(new MySessionCallback());
+
+        // Start the Media Session since the activity is active.
+        mMediaSession.setActive(true);
+
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,7 +154,8 @@ public class StepViewActivity extends AppCompatActivity implements ExoPlayer.Eve
         }
 
         if (!mSteps.get(mPosition).getVideoURL().isEmpty()) {
-            initializePlayer(makeURIVideo(mSteps.get(mPosition).getVideoURL()), false);
+            if (mExoPlayer == null)
+                initializePlayer(makeURIVideo(mSteps.get(mPosition).getVideoURL()), false);
         } else {
             toast.makeText(getBaseContext(), "This step doesn't have a video!", Toast.LENGTH_SHORT).show();
         }
@@ -185,21 +226,6 @@ public class StepViewActivity extends AppCompatActivity implements ExoPlayer.Eve
         });
     }
 
-
-    public static Uri makeURIVideo(String urlString) {
-        return Uri.parse(urlString);
-    }
-
-    public static void setDesignThisActivity() throws MalformedURLException, URISyntaxException {
-        System.out.println(mSteps.toString());
-        System.out.println(mPosition);
-        System.out.println(mSteps.get(mPosition).getDescription());
-        mTextViewStepDescription.setText(mSteps.get(mPosition).getDescription());
-        System.out.println("saiuuuuuuuuuu");
-    }
-
-
-
     @Override
     public void onStop() {
         super.onStop();
@@ -225,9 +251,11 @@ public class StepViewActivity extends AppCompatActivity implements ExoPlayer.Eve
     @Override
     protected void onResume() {
         SharedPreferences sharedPreferences = getSharedPreferences("positionVideo", MODE_PRIVATE);
-        long test  = sharedPreferences.getLong("timePositionVideo", 0);
+        long test = sharedPreferences.getLong("timePositionVideo", 0);
         mPositionVideo = test;
+
         initializePlayer(makeURIVideo(mSteps.get(mPosition).getVideoURL()), false);
+
         super.onResume();
     }
 
@@ -242,39 +270,6 @@ public class StepViewActivity extends AppCompatActivity implements ExoPlayer.Eve
 
         super.onSaveInstanceState(bundleOut);
     }
-
-    public static void initializeMediaSession(Context context) {
-
-        // Create a MediaSessionCompat.
-        mMediaSession = new MediaSessionCompat(context, TAG);
-
-        // Enable callbacks from MediaButtons and TransportControls.
-        mMediaSession.setFlags(
-                MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS |
-                        MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS);
-
-        // Do not let MediaButtons restart the player when the app is not visible.
-        mMediaSession.setMediaButtonReceiver(null);
-
-        // Set an initial PlaybackState with ACTION_PLAY, so media buttons can start the player.
-        mStateBuilder = new PlaybackStateCompat.Builder()
-                .setActions(
-                        PlaybackStateCompat.ACTION_PLAY |
-                                PlaybackStateCompat.ACTION_PAUSE |
-                                PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS |
-                                PlaybackStateCompat.ACTION_PLAY_PAUSE);
-
-        mMediaSession.setPlaybackState(mStateBuilder.build());
-
-
-        // MySessionCallback has methods that handle callbacks from a media controller.
-        mMediaSession.setCallback(new MySessionCallback());
-
-        // Start the Media Session since the activity is active.
-        mMediaSession.setActive(true);
-
-    }
-
 
     private void initializePlayer(Uri mediaUri, boolean work) {
         if (mExoPlayer == null) {
