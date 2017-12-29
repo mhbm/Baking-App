@@ -1,6 +1,7 @@
 package com.example.android.bakingapp.ui;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -63,19 +64,15 @@ public class DetailRecipeActivity extends AppCompatActivity implements DetailRec
     static String SELECTED_RECIPES = "Selected_Recipes";
     static String SELECTED_STEP = "Selected_STEP";
     static String SELECTED_POSITION = "Selected_POSITION";
+    private static SimpleExoPlayer mExoPlayer;
     RecipeModel recipeModel = new RecipeModel();
     DetailRecipeFragment detailRecipeFragment;
     TextView mTextViewIngredient;
-
-    private boolean tabletLayout;
-
-
     Button mPrevButton;
     Button mNextButton;
     Toast toast;
     TextView mTextViewStepDescription;
-
-    private static SimpleExoPlayer mExoPlayer;
+    private boolean tabletLayout;
     private SimpleExoPlayerView mPlayerView;
 
     private Bundle savedInstanceState;
@@ -115,9 +112,9 @@ public class DetailRecipeActivity extends AppCompatActivity implements DetailRec
     }
 
 
-    public void putIngredientIntoWidget (ArrayList<IngredientModel> ingredientListParameter) {
+    public void putIngredientIntoWidget(ArrayList<IngredientModel> ingredientListParameter) {
 
-        if (ingredientListParameter != null ) {
+        if (ingredientListParameter != null) {
             ArrayList<String> ingredientListString = new ArrayList<>();
 
             //Title of RECIPE
@@ -166,6 +163,45 @@ public class DetailRecipeActivity extends AppCompatActivity implements DetailRec
     }
 
 
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (mExoPlayer != null) {
+            mExoPlayer.stop();
+            mExoPlayer.release();
+        }
+    }
+
+    @Override
+    public void onPause() {
+        SharedPreferences sharedPreferences = getSharedPreferences("positionVideo", MODE_PRIVATE);
+        SharedPreferences.Editor edit = sharedPreferences.edit();
+        if (mExoPlayer != null) {
+            edit.putLong("timePositionVideo", mExoPlayer.getCurrentPosition());
+        } else {
+            edit.putLong("timePositionVideo", 0);
+        }
+        edit.commit();
+        super.onPause();
+        if (mExoPlayer != null) {
+            mExoPlayer.stop();
+            mExoPlayer.release();
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        SharedPreferences sharedPreferences = getSharedPreferences("positionVideo", MODE_PRIVATE);
+        long test = sharedPreferences.getLong("timePositionVideo", 0);
+        mPositionVideo = test;
+        if (mSteps != null) {
+            initializePlayer(makeURIVideo(mSteps.get(mPosition).getVideoURL()), false);
+        }
+
+        super.onResume();
+    }
+
+
     /// More Information -> https://developer.android.com/training/implementing-navigation/ancestral.html
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -189,6 +225,7 @@ public class DetailRecipeActivity extends AppCompatActivity implements DetailRec
             intent.putExtras(selectedRecipeBundle);
             startActivity(intent);
         } else {
+            mPositionVideo = 0;
             mSteps = stepModel;
             mPosition = clickItemIndex;
             initializeTabletLayout();
