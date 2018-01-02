@@ -75,7 +75,6 @@ public class StepViewActivity extends AppCompatActivity implements ExoPlayer.Eve
         System.out.println(mPosition);
         System.out.println(mSteps.get(mPosition).getDescription());
         mTextViewStepDescription.setText(mSteps.get(mPosition).getDescription());
-        System.out.println("saiuuuuuuuuuu");
     }
 
     public static void initializeMediaSession(Context context) {
@@ -153,10 +152,8 @@ public class StepViewActivity extends AppCompatActivity implements ExoPlayer.Eve
             }).start();
         }
 
-        if (!mSteps.get(mPosition).getVideoURL().isEmpty()) {
-            if (mExoPlayer == null)
-                initializePlayer(makeURIVideo(mSteps.get(mPosition).getVideoURL()), false);
-        } else {
+        if (mSteps.get(mPosition).getVideoURL().isEmpty()) {
+
             toast.makeText(getBaseContext(), "This step doesn't have a video!", Toast.LENGTH_SHORT).show();
         }
 
@@ -178,8 +175,6 @@ public class StepViewActivity extends AppCompatActivity implements ExoPlayer.Eve
                     toast.makeText(getBaseContext(), "This is the first step!", Toast.LENGTH_SHORT).show();
                 } else {
                     mExoPlayer.stop();
-
-//                    initializePlayer(Uri.parse(String.valueOf(uri)), false);
                     mPosition--;
                     if (!mSteps.get(mPosition).getVideoURL().isEmpty()) {
                         initializePlayer(makeURIVideo(mSteps.get(mPosition).getVideoURL()), true);
