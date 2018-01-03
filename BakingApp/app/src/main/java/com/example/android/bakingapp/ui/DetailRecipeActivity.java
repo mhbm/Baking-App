@@ -194,15 +194,19 @@ public class DetailRecipeActivity extends AppCompatActivity implements DetailRec
         }
     }
 
+    boolean getPlaying = false;
+
     @Override
     protected void onResume() {
-        SharedPreferences sharedPreferences = getSharedPreferences("positionVideo", MODE_PRIVATE);
-        long test = sharedPreferences.getLong("timePositionVideo", 0);
-        mPositionVideo = test;
-        if (mSteps != null) {
-            initializePlayer(makeURIVideo(mSteps.get(mPosition).getVideoURL()), false);
+        if (mPlayerView != null) {
+            SharedPreferences sharedPreferences = getSharedPreferences("positionVideo", MODE_PRIVATE);
+            long test = sharedPreferences.getLong("timePositionVideo", 0);
+            getPlaying = sharedPreferences.getBoolean("getPlayisPlaying", false);
+            mPositionVideo = test;
+            if (mSteps != null) {
+                initializePlayer(makeURIVideo(mSteps.get(mPosition).getVideoURL()), false);
+            }
         }
-
         super.onResume();
     }
 
@@ -342,7 +346,7 @@ public class DetailRecipeActivity extends AppCompatActivity implements DetailRec
 
     private void initializePlayer(Uri mediaUri, boolean work) {
         if (mExoPlayer == null) {
-            System.out.println("aquiii");
+
             // Create an instance of the ExoPlayer.
             TrackSelector trackSelector = new DefaultTrackSelector();
             LoadControl loadControl = new DefaultLoadControl();
