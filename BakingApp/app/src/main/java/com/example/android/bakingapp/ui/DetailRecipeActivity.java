@@ -10,6 +10,7 @@ import android.os.PersistableBundle;
 import android.support.v4.app.NavUtils;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -86,6 +87,18 @@ public class DetailRecipeActivity extends AppCompatActivity implements DetailRec
 
         if (tabletLayout) {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        } else {
+            Toolbar menuToolbar = findViewById(R.id.menu_toolbar);
+            setSupportActionBar(menuToolbar);
+            getSupportActionBar().setTitle(getString(R.string.menu_title));
+
+            menuToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    onBackPressed();
+                    onBackPressed();
+                }
+            });
         }
 
         super.onCreate(savedInstanceState);
@@ -114,7 +127,11 @@ public class DetailRecipeActivity extends AppCompatActivity implements DetailRec
         if (recipeModel != null) {
             putIngredientIntoWidget(recipeModel.getIngredients());
         }
+
+
     }
+
+
 
 
     public void putIngredientIntoWidget(ArrayList<IngredientModel> ingredientListParameter) {

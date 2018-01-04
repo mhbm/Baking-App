@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -117,7 +118,6 @@ public class StepViewActivity extends AppCompatActivity implements ExoPlayer.Eve
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        System.out.println("aaaaaaaaaaaaaaaxxxxxxxxxxx");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_step_view);
 
@@ -225,6 +225,18 @@ public class StepViewActivity extends AppCompatActivity implements ExoPlayer.Eve
                         e.printStackTrace();
                     }
                 }
+            }
+        });
+
+
+        Toolbar menuToolbar = findViewById(R.id.menu_toolbar);
+        setSupportActionBar(menuToolbar);
+        getSupportActionBar().setTitle("Video");
+
+        menuToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
             }
         });
     }
