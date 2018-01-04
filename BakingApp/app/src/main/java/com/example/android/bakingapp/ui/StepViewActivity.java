@@ -54,6 +54,8 @@ public class StepViewActivity extends AppCompatActivity implements ExoPlayer.Eve
     static String SELECTED_STEP = "Selected_STEP";
     static String SELECTED_POSITION = "Selected_POSITION";
     static String SELECTED_TIME_VIDEO_EXOPLAYER = "Selected_TIME_EXOPLAYER";
+    final static String SELECTED_STATUS_VIDEO = "Selected_STATUS_VIDEO";
+
     static ArrayList<StepModel> mSteps;
     static int mPosition;
     static long mPositionVideo;
@@ -65,6 +67,9 @@ public class StepViewActivity extends AppCompatActivity implements ExoPlayer.Eve
     private static SimpleExoPlayer mExoPlayer;
     private static SimpleExoPlayerView mPlayerView;
     private static PlaybackStateCompat.Builder mStateBuilder;
+
+
+    boolean playWhenReady = true;
 
     public static Uri makeURIVideo(String urlString) {
         return Uri.parse(urlString);
@@ -111,6 +116,8 @@ public class StepViewActivity extends AppCompatActivity implements ExoPlayer.Eve
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        System.out.println("aaaaaaaaaaaaaaaxxxxxxxxxxx");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_step_view);
 
@@ -129,6 +136,7 @@ public class StepViewActivity extends AppCompatActivity implements ExoPlayer.Eve
             mPosition = savedInstanceState.getInt(SELECTED_POSITION);
             mSteps = savedInstanceState.getParcelableArrayList(SELECTED_STEP);
             mPositionVideo = savedInstanceState.getLong(SELECTED_TIME_VIDEO_EXOPLAYER);
+            playWhenReady = savedInstanceState.getBoolean(SELECTED_STATUS_VIDEO);
         } else {
             mSteps = getIntent().getParcelableArrayListExtra(SELECTED_STEP);
             mPosition = getIntent().getIntExtra(SELECTED_POSITION, 0);
@@ -249,6 +257,8 @@ public class StepViewActivity extends AppCompatActivity implements ExoPlayer.Eve
         long test = sharedPreferences.getLong("timePositionVideo", 0);
         mPositionVideo = test;
 
+        System.out.println("kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk");
+
         initializePlayer(makeURIVideo(mSteps.get(mPosition).getVideoURL()), false);
 
         super.onResume();
@@ -259,6 +269,7 @@ public class StepViewActivity extends AppCompatActivity implements ExoPlayer.Eve
         if (mSteps != null) {
             bundleOut.putParcelableArrayList(SELECTED_STEP, mSteps);
             bundleOut.putInt(SELECTED_POSITION, mPosition);
+            bundleOut.putBoolean(SELECTED_STATUS_VIDEO, mExoPlayer.getPlayWhenReady());
         }
         if (mExoPlayer != null)
             bundleOut.putLong(SELECTED_TIME_VIDEO_EXOPLAYER, mExoPlayer.getCurrentPosition());
@@ -284,7 +295,7 @@ public class StepViewActivity extends AppCompatActivity implements ExoPlayer.Eve
                     this, userAgent), new DefaultExtractorsFactory(), null, null);
             mExoPlayer.seekTo(mPositionVideo);
             mExoPlayer.prepare(mediaSource);
-            mExoPlayer.setPlayWhenReady(true);
+            mExoPlayer.setPlayWhenReady(playWhenReady);
         } else if (work) {
 
             // Prepare the MediaSource.
@@ -294,7 +305,7 @@ public class StepViewActivity extends AppCompatActivity implements ExoPlayer.Eve
                     this, userAgent), new DefaultExtractorsFactory(), null, null);
             mExoPlayer.seekTo(mPositionVideo);
             mExoPlayer.prepare(mediaSource);
-            mExoPlayer.setPlayWhenReady(true);
+            mExoPlayer.setPlayWhenReady(playWhenReady);
 
         } else {
             ///THIS CODE WORKS WHEN THE APP IS ONPAUSED AND AFTER ON RESUME
@@ -308,7 +319,7 @@ public class StepViewActivity extends AppCompatActivity implements ExoPlayer.Eve
                     this, userAgent), new DefaultExtractorsFactory(), null, null);
             mExoPlayer.seekTo(mPositionVideo);
             mExoPlayer.prepare(mediaSource);
-            mExoPlayer.setPlayWhenReady(true);
+            mExoPlayer.setPlayWhenReady(playWhenReady);
         }
     }
 
