@@ -9,7 +9,7 @@ import android.content.Intent;
 import android.widget.RemoteViews;
 
 import com.example.android.bakingapp.R;
-import com.example.android.bakingapp.ui.DetailRecipeActivity;
+import com.example.android.bakingapp.ui.MainActivity;
 
 import java.util.ArrayList;
 
@@ -26,7 +26,7 @@ public class MyAppWidgetProvider extends AppWidgetProvider {
         // Construct the RemoteViews object
         RemoteViews widgets = new RemoteViews(context.getPackageName(), R.layout.widget_recipe_ingredients);
 
-        Intent intentRecipe = new Intent(context, DetailRecipeActivity.class);
+        Intent intentRecipe = new Intent(context, MainActivity.class);
 
 
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 10, intentRecipe, PendingIntent.FLAG_UPDATE_CURRENT);
