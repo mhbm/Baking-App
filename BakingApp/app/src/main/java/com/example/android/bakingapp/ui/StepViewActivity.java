@@ -50,13 +50,11 @@ import java.util.ArrayList;
 
 public class StepViewActivity extends AppCompatActivity implements ExoPlayer.EventListener {
 
+    final static String SELECTED_STATUS_VIDEO = "Selected_STATUS_VIDEO";
     private static final String TAG = MainActivity.class.getSimpleName();
-
     static String SELECTED_STEP = "Selected_STEP";
     static String SELECTED_POSITION = "Selected_POSITION";
     static String SELECTED_TIME_VIDEO_EXOPLAYER = "Selected_TIME_EXOPLAYER";
-    final static String SELECTED_STATUS_VIDEO = "Selected_STATUS_VIDEO";
-
     static ArrayList<StepModel> mSteps;
     static int mPosition;
     static long mPositionVideo;
@@ -117,6 +115,8 @@ public class StepViewActivity extends AppCompatActivity implements ExoPlayer.Eve
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        boolean tabletLayoutLand = getResources().getBoolean(R.bool.tabletLayout);
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_step_view);
@@ -228,17 +228,19 @@ public class StepViewActivity extends AppCompatActivity implements ExoPlayer.Eve
             }
         });
 
+        if (!tabletLayoutLand) {
 
-        Toolbar menuToolbar = findViewById(R.id.menu_toolbar);
-        setSupportActionBar(menuToolbar);
-        getSupportActionBar().setTitle("Video");
+            Toolbar menuToolbar = findViewById(R.id.menu_toolbar);
+            setSupportActionBar(menuToolbar);
+            getSupportActionBar().setTitle("Video");
 
-        menuToolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onBackPressed();
-            }
-        });
+            menuToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    onBackPressed();
+                }
+            });
+        }
     }
 
     @Override

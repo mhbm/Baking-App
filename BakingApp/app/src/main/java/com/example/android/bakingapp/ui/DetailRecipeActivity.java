@@ -2,7 +2,6 @@ package com.example.android.bakingapp.ui;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -112,7 +111,7 @@ public class DetailRecipeActivity extends AppCompatActivity implements DetailRec
         }
 
         if (tabletLayout) {
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+
         } else {
             Toolbar menuToolbar = findViewById(R.id.menu_toolbar);
             setSupportActionBar(menuToolbar);
