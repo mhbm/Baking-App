@@ -84,23 +84,6 @@ public class DetailRecipeActivity extends AppCompatActivity implements DetailRec
 
         tabletLayout = getResources().getBoolean(R.bool.tabletLayout);
 
-
-        if (tabletLayout) {
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-        } else {
-            Toolbar menuToolbar = findViewById(R.id.menu_toolbar);
-            setSupportActionBar(menuToolbar);
-            getSupportActionBar().setTitle(getString(R.string.menu_title));
-
-            menuToolbar.setNavigationOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    onBackPressed();
-                    onBackPressed();
-                }
-            });
-        }
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_recipe);
 
@@ -126,6 +109,22 @@ public class DetailRecipeActivity extends AppCompatActivity implements DetailRec
 
         if (recipeModel != null) {
             putIngredientIntoWidget(recipeModel.getIngredients());
+        }
+
+        if (tabletLayout) {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        } else {
+            Toolbar menuToolbar = findViewById(R.id.menu_toolbar);
+            setSupportActionBar(menuToolbar);
+            getSupportActionBar().setTitle(getString(R.string.menu_title));
+
+            menuToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    onBackPressed();
+                    onBackPressed();
+                }
+            });
         }
 
 
